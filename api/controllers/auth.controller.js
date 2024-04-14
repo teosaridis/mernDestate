@@ -48,6 +48,8 @@ export const login = async (req, res) => {
       { expiresIn: cookieAge }
     );
 
+    const { password: userPassword, ...userInfo } = user;
+
     res
       .cookie("mernDestateToken", token, {
         httpOnly: true,
@@ -55,7 +57,7 @@ export const login = async (req, res) => {
         maxAge: cookieAge,
       })
       .status(200)
-      .json({ message: "Login successfully!" });
+      .json(userInfo);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Failed to login!" });
