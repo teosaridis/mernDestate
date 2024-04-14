@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import "./login.scss";
 import { Link, useNavigate } from "react-router-dom";
 import apiRequest from "../../lib/apiRequest";
+import { AuthContext } from "../../context/AuthContext";
 
 function Login() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const { updateUser } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -16,6 +19,7 @@ function Login() {
     setError("");
 
     const formData = new FormData(e.target);
+
     const username = formData.get("username");
     const password = formData.get("password");
 
@@ -25,7 +29,11 @@ function Login() {
         password,
       });
       console.log(res);
-      localStorage.setItem("user", JSON.stringify(res.data));
+
+      // localStorage.setItem("user", JSON.stringify(res.data));
+
+      updateUser(res.data);
+
       navigate("/");
     } catch (error) {
       setError(error.response.data.message);
