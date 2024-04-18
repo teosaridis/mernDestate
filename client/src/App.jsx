@@ -46,6 +46,10 @@ function App() {
           element: <ProfilePage />,
         },
         {
+          path: "/profile/update",
+          element: <ProfileUpdatePage />,
+        },
+        {
           path: "/add",
           element: <NewPostPage />,
         },
