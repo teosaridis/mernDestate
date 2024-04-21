@@ -2,7 +2,7 @@ import "./singlePage.scss";
 import Slider from "../../components/slider/Slider";
 import Map from "../../components/map/Map";
 // import { singlePostData, userData } from "../../lib/dummydata";
-import { redirect, useLoaderData } from "react-router-dom";
+import { useNavigate, useLoaderData } from "react-router-dom";
 import DOMPurify from "dompurify";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
@@ -10,17 +10,21 @@ import apiRequest from "../../lib/apiRequest";
 
 function SinglePage() {
   const singlePostData = useLoaderData();
-  const { currentUser } = useContext(AuthContext);
   const [saved, setSaved] = useState(singlePostData.isSaved);
+  const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSave = async () => {
+    if (!currentUser) {
+      navigate("/login");
+    }
     // AFTER REACT 19 UPDATE TO USEOPTIMISTIC HOOK
     setSaved((prev) => !prev);
-    if (!currentUser) {
-      redirect("/login");
-    }
+    //
     try {
-      await apiRequest.post("/users/save", { postId: singlePostData.id });
+      await apiRequest.post("/users/save", {
+        postId: singlePostData.id,
+      });
     } catch (err) {
       console.log(err);
       setSaved((prev) => !prev);
